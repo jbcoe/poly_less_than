@@ -3,18 +3,19 @@
 namespace visitors {
 template <class TVisitorBase, class... TArgs> class PolyLessThan {
 public:
+
   template <class T1, class T2>
-  bool operator()(const T1 *pt1, const T2 *pt2) const {
-    auto polyCompare = Impl<1, TVisitorBase, TArgs...>();
+  bool operator()(const T1* pt1, const T2* pt2) const {
+    auto polyCompare = Impl<1, TArgs...>();
     pt1->Accept(polyCompare);
     pt2->Accept(polyCompare);
     return polyCompare.result;
   }
 
 private:
-  template <int N, class TInnerVisitorBase, class... TInnerArgs>
-  struct Impl : TVisitorBase {
 
+  template <int N, class... TInnerArgs>
+  struct Impl : TVisitorBase {
     bool result = false;
 
   protected:
@@ -22,9 +23,10 @@ private:
     const void *pt = nullptr;
   };
 
-  template <int N, class TInnerVisitorBase, class TItem, class... TInnerArgs>
-  struct Impl<N, TInnerVisitorBase, TItem, TInnerArgs...>
-      : Impl<N + 1, TInnerVisitorBase, TInnerArgs...> {
+  template <int N, class TItem, class... TInnerArgs>
+  struct Impl<N, TItem, TInnerArgs...>
+      : Impl<N + 1, TInnerArgs...>
+  {
     void Visit(const TItem &t) override final {
       if (this->n == 0) {
         this->n = N;
@@ -38,5 +40,10 @@ private:
       }
     }
   };
+  
+  static_assert(
+      !std::is_abstract<Impl<1, TArgs...>>::value,
+      "Cannot compile polymorphic comparator: "
+      "no concrete implementation for one or more Visit functions");
 };
 } // namespace visitors
