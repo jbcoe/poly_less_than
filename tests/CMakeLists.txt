@@ -1,0 +1,2 @@
+add_executable(test_poly_less_than test_poly_less_than.cpp)
+
