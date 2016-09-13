@@ -10,4 +10,4 @@ add_subdirectory(tests)
 
 enable_testing()
 
-add_test(test_inline_visitor ${CMAKE_BINARY_DIR}/tests/test_inline_visitor -s)
+add_test(test_poly_less_than ${CMAKE_BINARY_DIR}/tests/test_poly_less_than -s)
