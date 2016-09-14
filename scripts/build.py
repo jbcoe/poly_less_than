@@ -8,11 +8,12 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("-t", help="run tests", action="store_true", dest="run_tests")
     parser.add_argument("-o", help="output dir (relative to source dir)", default="build", dest="out_dir")
+    parser.add_argument("-c", help="Build config", default="Debug", dest="conf")
     args = parser.parse_args()
     
     src_dir = os.path.dirname(os.path.dirname(__file__))
     
-    subprocess.check_call("cmake . -B{}".format(args.out_dir).split(), cwd=src_dir)
+    subprocess.check_call("cmake . -B{} -DCMAKE_BUILD_TYPE={}".format(args.out_dir,args.conf).split(), cwd=src_dir)
     subprocess.check_call("cmake --build ./{}".format(args.out_dir).split(), cwd=src_dir)
     
     

@@ -37,17 +37,16 @@ class Student : public Resident {
 };
 
 class Teacher : public Resident {
-  std::string name_;
+  int id_;
 
  public:
-  Teacher(const char* name) : name_(name) {}
+  Teacher(int id) : id_(id) {}
   void Accept(ResidentVisitor& v) const override { v.Visit(*this); }
 
   friend bool operator<(const Teacher& lhs, const Teacher& rhs) {
-    return lhs.name_ < rhs.name_;
+    return lhs.id_ < rhs.id_;
   }
 };
-
 
 bool operator < (const Resident& lhs, const Resident& rhs)
 {
@@ -56,9 +55,20 @@ bool operator < (const Resident& lhs, const Resident& rhs)
 
 } // end namespace
 
-TEST_CASE("Different types are sorted", "[PolyLessThan]") {
-  Teacher t("Mr Cawston");
-  Student s("Manoj");
+TEST_CASE("Different types are compared", "[PolyLessThan]") {
+  Teacher t(101);
+  Student s("Tommy");
 
   REQUIRE(s<t);
+  REQUIRE_FALSE(t<s);
+}
+
+TEST_CASE("Same types are compared", "[PolyLessThan]") {
+  Teacher t100(100);
+  Teacher t1000(1000);
+
+  REQUIRE(t100<t1000);
+  REQUIRE_FALSE(t1000<t100);
+  REQUIRE_FALSE(t1000<t1000);
+  REQUIRE_FALSE(t100<t100);
 }
