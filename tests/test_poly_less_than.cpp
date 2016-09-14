@@ -1,4 +1,4 @@
-#define CATCH_CONFIG_MAIN  
+#define CATCH_CONFIG_MAIN
 
 #include <catch.hpp>
 #include <string>
@@ -12,8 +12,7 @@ struct Resident;
 struct Student;
 struct Teacher;
 
-struct ResidentVisitor
-{
+struct ResidentVisitor {
   virtual ~ResidentVisitor() = default;
   virtual void Visit(const Student& s) = 0;
   virtual void Visit(const Teacher& s) = 0;
@@ -48,27 +47,26 @@ class Teacher : public Resident {
   }
 };
 
-bool operator < (const Resident& lhs, const Resident& rhs)
-{
+bool operator<(const Resident& lhs, const Resident& rhs) {
   return PolyLessThan<ResidentVisitor, Student, Teacher>()(&lhs, &rhs);
 }
 
-} // end namespace
+}  // end namespace
 
 TEST_CASE("Different types are compared", "[PolyLessThan]") {
   Teacher t(101);
   Student s("Tommy");
 
-  REQUIRE(s<t);
-  REQUIRE_FALSE(t<s);
+  REQUIRE(s < t);
+  REQUIRE_FALSE(t < s);
 }
 
 TEST_CASE("Same types are compared", "[PolyLessThan]") {
   Teacher t100(100);
   Teacher t1000(1000);
 
-  REQUIRE(t100<t1000);
-  REQUIRE_FALSE(t1000<t100);
-  REQUIRE_FALSE(t1000<t1000);
-  REQUIRE_FALSE(t100<t100);
+  REQUIRE(t100 < t1000);
+  REQUIRE_FALSE(t1000 < t100);
+  REQUIRE_FALSE(t1000 < t1000);
+  REQUIRE_FALSE(t100 < t100);
 }
